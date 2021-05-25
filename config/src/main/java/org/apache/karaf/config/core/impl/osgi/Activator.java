@@ -18,6 +18,7 @@ package org.apache.karaf.config.core.impl.osgi;
 
 import org.apache.felix.fileinstall.ArtifactInstaller;
 import org.apache.karaf.config.core.ConfigRepository;
+import org.apache.karaf.config.core.impl.CfgConfigSynchronizer;
 import org.apache.karaf.config.core.impl.ConfigMBeanImpl;
 import org.apache.karaf.config.core.impl.ConfigRepositoryImpl;
 import org.apache.karaf.config.core.impl.JsonConfigInstaller;
@@ -61,6 +62,9 @@ public class Activator extends BaseActivator {
 
         JsonConfigInstaller jsonConfigInstaller = new JsonConfigInstaller(configurationAdmin);
         register(new Class[]{ ArtifactInstaller.class, ConfigurationListener.class }, jsonConfigInstaller);
+        
+        CfgConfigSynchronizer cfgConfigSynchronizer = new CfgConfigSynchronizer(configurationAdmin);
+        register(new Class[]{ ConfigurationListener.class }, cfgConfigSynchronizer);
 
         ConfigMBeanImpl configMBean = new ConfigMBeanImpl();
         configMBean.setConfigRepo(configRepository);
